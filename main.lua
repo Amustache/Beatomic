@@ -6,6 +6,7 @@
 local elements = require "elements"
 local colours = require "colours"
 local fonts = require "fonts"
+local cursors = require "cursors"
 
 function calculate_electron_x_y(shell_level, num_electrons, cur_electron, step)
     local step = step or 0
@@ -19,6 +20,8 @@ end
 
 -- INIT
 function love.load()
+    love.mouse.setCursor(cursors.point)
+
     w_w = love.graphics.getWidth()
     w_h = love.graphics.getHeight()
 
@@ -51,6 +54,38 @@ function love.load()
         end
         table.insert(electrons, shell)
     end
+
+    -- Get samples
+    samples = {}
+    sample_files = love.filesystem.getDirectoryItems("samples")
+    for i = 1, #sample_files do
+        local category_name = sample_files[i]
+        cur_samples = love.filesystem.getDirectoryItems("samples/"..category_name)
+        local category = {}
+        for j = 1, #cur_samples do
+            local sample = {
+                name = string.sub(cur_samples[j], 1, -5),
+                sound = love.audio.newSource("samples/"..category_name.."/"..cur_samples[j], "static"),
+            }
+            table.insert(category, sample)
+            -- sample.sound:play()  -- It's really funny but don't do that lol
+        end
+        table[category_name] = category
+    end
+end
+
+-- MAIN LOOP
+dt_tot = 0
+function love.update(dt)
+    dt_tot = dt_tot + dt
+--    print(dt_tot)
+--    for shell, els in ipairs(electrons) do
+--        for i, el in ipairs(els) do
+--            local x, y = calculate_electron_x_y(shell, #els, i, dt_tot)
+--            el.x = x
+--            el.y = y
+--        end
+--    end
 end
 
 function draw_atom()
@@ -72,7 +107,7 @@ function draw_atom()
     love.graphics.print(cur_element.symbol, nucleus_center_x - text_width / 2, nucleus_center_y - text_height / 2)
 end
 
-function draw_infos()
+function draw_infos() -- Need fixing...
     love.graphics.setColor(colours.black())
     love.graphics.setFont(fonts.atom_info)
     local text_width = fonts.atom_info:getWidth(cur_element.name)
@@ -88,20 +123,13 @@ function love.draw()
     draw_atom()
 
     draw_infos()
-end
 
--- MAIN LOOP
-dt_tot = 0
-function love.update(dt)
-    dt_tot = dt_tot + dt
---    print(dt_tot)
---    for shell, els in ipairs(electrons) do
---        for i, el in ipairs(els) do
---            local x, y = calculate_electron_x_y(shell, #els, i, dt_tot)
---            el.x = x
---            el.y = y
---        end
---    end
+    -- Debug
+    if true then
+        love.graphics.setColor(colours.black())
+        love.graphics.line(w_w / 2, 0, w_w / 2, w_h)
+        love.graphics.line(0, 2 * w_h / 3, w_w / 2, 2 * w_h / 3)
+    end
 end
 
 -- END
