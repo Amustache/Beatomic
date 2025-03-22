@@ -144,3 +144,5 @@ elements = {
         shells = { 2, 8, 8 },
     },
 }
+
+return elements
