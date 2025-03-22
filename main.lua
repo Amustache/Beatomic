@@ -20,6 +20,7 @@ end
 
 -- INIT
 function love.load()
+    cursor_state = "idle"  -- idle, clickable, clicked
     love.mouse.setCursor(cursors.point)
 
     w_w = love.graphics.getWidth()
@@ -78,6 +79,15 @@ end
 dt_tot = 0
 function love.update(dt)
     dt_tot = dt_tot + dt
+
+    if cursor_state == "idle" then  -- idle, clickable, clicked
+        love.mouse.setCursor(cursors.point)
+    elseif cursor_state == "clickable" then
+        love.mouse.setCursor(cursors.open)
+    else
+        love.mouse.setCursor(cursors.closed)
+    end
+
 --    print(dt_tot)
 --    for shell, els in ipairs(electrons) do
 --        for i, el in ipairs(els) do
