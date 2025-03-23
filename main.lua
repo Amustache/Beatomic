@@ -20,6 +20,8 @@ current_element = elements[math.random(#elements)]  -- nil
 math.randomseed(os.time())
 
 function love.load()
+    love.mouse.setCursor(cursors.point)
+
     game_state = periodic
     game_state.load()
 end

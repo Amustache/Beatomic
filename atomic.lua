@@ -55,8 +55,6 @@ end
 
 function atomic.load()
     print("scene atomic loaded")
-    love.mouse.setCursor(cursors.point)
-
     -- Electrons
     for shell_level, num_electrons in ipairs(current_element.shells) do
         local current_shell = {}
