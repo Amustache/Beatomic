@@ -8,11 +8,9 @@ local elements = require "elements"
 local colours = require "colours"
 local fonts = require "fonts"
 local cursors = require "cursors"
+local utilities = require "utilities"
 
 -- Parameters
-math.randomseed(os.time())
-local w_w = love.graphics.getWidth()
-local w_h = love.graphics.getHeight()
 local bpm = 60
 
 -- Atom
@@ -22,7 +20,6 @@ local radius_shell_extra = 40
 local radius_electron = 15
 
 -- UI/UX
-local cursor_state = "point" -- point, open, closed
 local nucleus_center_x = w_w / 2 / 2
 local nucleus_center_y = (w_h / 3)
 local infos_center_x = w_w / 2 / 2
@@ -44,6 +41,8 @@ local active_sample = nil
 local active_button = nil
 local current_beat = 0
 
+ELEMENT = elements[math.random(#elements)]
+
 function calculate_electron_x_y(shell_level, num_electrons, cur_electron)
     local r = radius_shell + shell_level * radius_shell_extra
     local sep = 360 / num_electrons
@@ -54,9 +53,7 @@ function calculate_electron_x_y(shell_level, num_electrons, cur_electron)
     return nucleus_center_x + x, nucleus_center_y + y, ang_deg
 end
 
-function love.load()
-    ELEMENT = elements[math.random(#elements)]
-
+function love.init()
     love.mouse.setCursor(cursors.point)
 
     -- Electrons
@@ -136,11 +133,6 @@ function love.load()
     end
 end
 
-function mouse_in_area(obj)
-    local mouse_x, mouse_y = love.mouse.getPosition()
-    return obj.x < mouse_x and mouse_x < obj.x + obj.w and obj.y < mouse_y and mouse_y < obj.y + obj.h
-end
-
 function button_on_electron(button, el)
     local x = el.x - radius_electron
     local y = el.y - radius_electron
@@ -181,7 +173,7 @@ function love.mousereleased(x, y, button, istouch, presses)
             active_button.dragging.active = false
             active_button.x = active_button.x_og
             active_button.y = active_button.y_og
-            active_button.sample.sound:stop()
+            -- active_button.sample.sound:stop()
             active_button = nil
         end
     end
@@ -279,32 +271,6 @@ function draw_label(label)
     -- Text
     love.graphics.setColor(colours.black())
     love.graphics.print(label.text, label.x, label.y)
-end
-
-function draw_button(button)
-    love.graphics.setFont(fonts.regular)
-    local text_width = fonts.regular:getWidth(button.text)
-    local text_height = fonts.regular:getHeight()
-
-    -- Shadow
-    love.graphics.setColor(colours.black())
-    love.graphics.rectangle("fill", button.x, button.y, button.w, button.h, 10, 10)
-
-    -- Actual button
-    love.graphics.setColor(colours.nucleus())
-    local x = button.x
-    local y = button.y
-    if not button.dragging.active then
-        x = button.x - 5
-        y = button.y - 5
-    end
-    love.graphics.rectangle("fill", x, y, button.w, button.h, 10, 10)
-    love.graphics.setColor(colours.black())
-    love.graphics.rectangle("line", x, y, button.w, button.h, 10, 10)
-
-    -- Text
-    love.graphics.setColor(colours.black())
-    love.graphics.print(button.text, x, y)
 end
 
 function draw_infos()
