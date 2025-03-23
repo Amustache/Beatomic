@@ -13,7 +13,7 @@ local cursors = require "cursors"
 math.randomseed(os.time())
 local w_w = love.graphics.getWidth()
 local w_h = love.graphics.getHeight()
-local bpm = 120
+local bpm = 60
 
 -- Atom
 local radius_nucleus = 50
@@ -35,6 +35,8 @@ local shells = {}
 local samples = {}
 local buttons = {}
 local labels = {}
+local timers = {}
+local shell_counts = {}
 
 -- Variables
 local time_elapsed = 0
@@ -45,10 +47,11 @@ local current_beat = 0
 function calculate_electron_x_y(shell_level, num_electrons, cur_electron)
     local r = radius_shell + shell_level * radius_shell_extra
     local sep = 360 / num_electrons
-    local ang = -math.rad(((cur_electron - 1) * sep) % 360)
+    local ang_deg = ((cur_electron - 1) * sep) % 360
+    local ang = -math.rad(ang_deg)
     local x = r * math.sin(ang)
     local y = r * math.cos(ang)
-    return nucleus_center_x + x, nucleus_center_y + y
+    return nucleus_center_x + x, nucleus_center_y + y, ang_deg
 end
 
 function love.load()
@@ -60,16 +63,25 @@ function love.load()
     for shell_level, num_electrons in ipairs(ELEMENT.shells) do
         local current_shell = {}
         for current_electron = 1, num_electrons do
-            local x, y = calculate_electron_x_y(shell_level, num_electrons, current_electron)
+            local x, y, ang = calculate_electron_x_y(shell_level, num_electrons, current_electron)
             local electron = {
                 x = x,
                 y = y,
+                beat = ang / 360,
                 instrument = nil,
             }
             table.insert(current_shell, electron)
         end
         table.insert(shells, current_shell)
+        -- Create a time per shell
+        local timer = cron.every(1 / (bpm / 60) / num_electrons, function() update_beat_sound(shell_level) end)
+        table.insert(timers, timer)
+        table.insert(shell_counts, 1)
     end
+
+    -- Debug
+    local timer = cron.every(1 / (bpm / 60), function() update_beat_sound(-1) end)
+    table.insert(timers, timer)
 
     -- Samples
     local sample_folders = love.filesystem.getDirectoryItems("samples")
@@ -106,6 +118,8 @@ function love.load()
                 category = category_name,
                 text = current_sample.name,
                 sample = current_sample,
+                x_og = menu_origin_x + 150 + ((i - 1) % 5) * 75,
+                y_og = menu_origin_y + 25 + (2 * cat_i * 75) + (math.floor((i - 1) / 5) * 75),
                 x = menu_origin_x + 150 + ((i - 1) % 5) * 75,
                 y = menu_origin_y + 25 + (2 * cat_i * 75) + (math.floor((i - 1) / 5) * 75),
                 w = 50,
@@ -123,8 +137,16 @@ function love.load()
 end
 
 function mouse_in_area(obj)
-    local mouse_x, mouse_y = love.mouse.getPosition();
+    local mouse_x, mouse_y = love.mouse.getPosition()
     return obj.x < mouse_x and mouse_x < obj.x + obj.w and obj.y < mouse_y and mouse_y < obj.y + obj.h
+end
+
+function button_on_electron(button, el)
+    local x = el.x - radius_electron
+    local y = el.y - radius_electron
+    local w = 2 * radius_electron
+    local h = 2 * radius_electron
+    return button.x < x and x + w < button.x + button.w and button.y < y and y + h < button.y + button.y
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
@@ -148,26 +170,49 @@ end
 function love.mousereleased(x, y, button, istouch, presses)
     if button == 1 then
         if active_button then
+            for shell, els in ipairs(shells) do
+                for i, el in ipairs(els) do
+                    if button_on_electron(active_button, el) then
+                        el.instrument = active_button.sample
+                    end
+                end
+            end
+
             active_button.dragging.active = false
+            active_button.x = active_button.x_og
+            active_button.y = active_button.y_og
             active_button.sample.sound:stop()
             active_button = nil
         end
     end
 end
 
--- Update beat
-function update_beat_sound()
-     tone:play()
-end
-function update_beat_visual()
-     current_beat = current_beat + 1
+function update_beat_sound(shell_level)
+    if shell_level == -1 then
+        tone:play()
+    else
+        local cur_el = shells[shell_level][shell_counts[shell_level]]
+        if cur_el.instrument then
+            cur_el.instrument.sound:stop()
+            cur_el.instrument.sound:play()
+        end
+        --shells[shell_level][shell_counts[shell_level]].sound
+        shell_counts[shell_level] = 1 + (shell_counts[shell_level] % #shells[shell_level])
+    end
 end
 
-local timer_sound = cron.every(1 / (bpm / 60), update_beat_sound)
+function update_beat_visual()
+    current_beat = current_beat + 1
+end
+
+--local timer_sound = cron.every(1 / (bpm / 60), update_beat_sound)
 local timer_visual = cron.every(1 / (bpm / 60) / 360, update_beat_visual)
 
 function love.update(dt)
-    timer_sound:update(dt)
+    --timer_sound:update(dt)
+    for i = 1, #timers do
+        timers[i]:update(dt)
+    end
     timer_visual:update(dt)
 
     if active_button and active_button.dragging.active then
@@ -204,6 +249,13 @@ function draw_atom()
         love.graphics.setColor(colours.shell[shell]())
         for i, el in ipairs(els) do
             love.graphics.circle("fill", el.x, el.y, radius_electron)
+            if el.instrument then
+                love.graphics.setColor(colours.black())
+                love.graphics.setLineWidth(5)
+                love.graphics.circle("line", el.x, el.y, radius_electron)
+                love.graphics.setLineWidth(1)
+                love.graphics.setColor(colours.shell[shell]())
+            end
         end
     end
 
@@ -255,6 +307,18 @@ function draw_button(button)
     love.graphics.print(button.text, x, y)
 end
 
+function draw_infos()
+    love.graphics.setFont(fonts.atom_info)
+    love.graphics.setColor(colours.black())
+
+    local text_width = fonts.atom_info:getWidth(ELEMENT.name)
+    love.graphics.printf(ELEMENT.name, infos_center_x - text_width/2, infos_center_y, text_width, "center")
+
+    local text_width = fonts.atom_info:getWidth(ELEMENT.conf_short)
+    local text_height = fonts.atom_info:getHeight()
+    love.graphics.printf(ELEMENT.conf_short, infos_center_x - text_width/2, infos_center_y + text_height, text_width, "center")
+end
+
 function love.draw()
     love.graphics.setBackgroundColor(colours.bg())
 
@@ -268,6 +332,8 @@ function love.draw()
     draw_beat()
 
     draw_atom()
+
+    draw_infos()
 
     for i = 1, #labels do
         draw_label(labels[i])
