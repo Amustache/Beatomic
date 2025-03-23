@@ -6,6 +6,8 @@ Use atoms to create beats!
 
 Made in ~24h for the [Orbital Game Jam 7 - Atomic](https://itch.io/jam/orbital-game-jam-7).
 
+Code source is available on [GitHub](https://github.com/Amustache/Beatomic).
+
 ## How to play?
 
 [**Play it live on Itch.io!**](https://astache.itch.io/beatomic)
