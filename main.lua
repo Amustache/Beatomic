@@ -8,12 +8,20 @@ local cursors = require "includes.cursors"
 local elements = require "includes.elements"
 local fonts = require "includes.fonts"
 local utilities = require "includes.utilities"
+local moonshine = require "includes.moonshine"
 
 atomic = require "atomic"
 periodic = require "periodic"
 
 function love.load()
     love.mouse.setCursor(cursors.point)
+
+    -- Shaders
+    effect = moonshine(moonshine.effects.chromasep)
+                  .chain(moonshine.effects.crt)
+                  .chain(moonshine.effects.scanlines)
+      effect.crt.distortionFactor = {1.02, 1.02}
+      effect.scanlines.opacity = 0.3
 
     if game_state == "main" then
         game_state = periodic
@@ -33,13 +41,15 @@ function love.update(dt)
 end
 
 function love.draw()
-    love.graphics.setBackgroundColor(colours.bg())
+    effect(function()
+        love.graphics.setBackgroundColor(colours.bg())
 
-    if game_state == "main" then
-        --
-    else
-        game_state.draw()
-    end
+        if game_state == "main" then
+            --
+        else
+            game_state.draw()
+        end
+    end)
 end
 
 function love.keypressed(key)
