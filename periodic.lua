@@ -63,6 +63,7 @@ function periodic.mousepressed(x, y, button, istouch, presses)
                 -- Click button
                 active_button = buttons[i]
                 active_button.dragging.active = true
+                print(active_button.text)
                 break -- No need to loop anymore
             end
         end
