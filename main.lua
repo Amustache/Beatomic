@@ -25,11 +25,7 @@ function love.load()
 
     if game_state == "main" then
         menu_start = {
-            category = nil,
             text = "Experiment",
-            sample = nil,
-            x_og = w_w / 2,
-            y_og = 2 * w_h / 3,
             x = w_w / 2,
             y = 2 * w_h / 3,
             w = 250,

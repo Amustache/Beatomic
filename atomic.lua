@@ -134,6 +134,19 @@ function atomic.load()
         end
         cat_i = cat_i + 1
     end
+
+    menu_back = {
+        text = "Get back",
+        x = infos_center_x - 150 / 2,
+        y = 1.25 * infos_center_y,
+        w = 150,
+        h = 100,
+        dragging = {
+            active = false,
+            diff_x = 0,
+            diff_y = 0,
+        },
+    }
 end
 
 function atomic.mousepressed(x, y, button, istouch, presses)
@@ -151,16 +164,27 @@ function atomic.mousepressed(x, y, button, istouch, presses)
                 active_button.sample.sound:play()
             end
         end
+        if mouse_in_area(menu_back) then
+            -- Click button
+            active_button = menu_back
+            active_button.dragging.active = true
+        end
     end
 end
 
 function atomic.mousereleased(x, y, button, istouch, presses)
     if button == 1 then
         if active_button then
-            for shell, els in ipairs(shells) do
-                for i, el in ipairs(els) do
-                    if button_on_electron(active_button, el) then
-                        el.instrument = active_button.sample
+            if active_button == menu_back then
+                current_element = nil
+                game_state = periodic
+                game_state.load()
+            else
+                for shell, els in ipairs(shells) do
+                    for i, el in ipairs(els) do
+                        if button_on_electron(active_button, el) then
+                            el.instrument = active_button.sample
+                        end
                     end
                 end
             end
@@ -202,7 +226,7 @@ function atomic.update(dt)
     end
     timer_visual:update(dt)
 
-    if active_button and active_button.dragging.active then
+    if active_button and active_button.dragging.active and active_button ~= menu_back then
         love.mouse.setCursor(cursors.closed)
         active_button.x = love.mouse.getX() - active_button.dragging.diff_x
         active_button.y = love.mouse.getY() - active_button.dragging.diff_y
@@ -280,6 +304,7 @@ function atomic.draw()
 
     -- Infos & Buttons
     draw_infos()
+    draw_button(menu_back)
 
     -- Samples
     for i = 1, #labels do
