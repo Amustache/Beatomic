@@ -45,7 +45,7 @@ element_template = """    {{
         shells = {{ {} }},
     }},\n"""
 
-with open("elements.lua", "w") as f:
+with open("includes/elements.lua", "w") as f:
     f.write("elements = {\n")
 
     for element in elements:

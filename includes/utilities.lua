@@ -1,11 +1,24 @@
 ---
 --- Created by stache.
---- DateTime: 23.03.25 06:22
+--- DateTime: 23.03.25 07:40
 ---
--- Parameters
-math.randomseed(os.time())
 w_w = love.graphics.getWidth()
 w_h = love.graphics.getHeight()
+
+function draw_label(label)
+    love.graphics.setFont(fonts.regular)
+    local text_width = fonts.regular:getWidth(label.text)
+    local text_height = fonts.regular:getHeight()
+
+    love.graphics.setColor(colours.nucleus())
+    love.graphics.rectangle("fill", label.x, label.y, label.w, label.h, 10, 10)
+    love.graphics.setColor(colours.black())
+    love.graphics.rectangle("line", label.x, label.y, label.w, label.h, 10, 10)
+
+    -- Text
+    love.graphics.setColor(colours.black())
+    love.graphics.print(label.text, label.x, label.y)
+end
 
 function draw_button(button)
     love.graphics.setFont(fonts.regular)

@@ -1,13 +1,8 @@
 ---
 --- Created by stache.
---- DateTime: 22.03.25 18:46
+--- DateTime: 23.03.25 07:24
 ---
-local cron = require "includes.cron"
-local elements = require "includes.elements"
-local colours = require "includes.colours"
-local fonts = require "includes.fonts"
-local cursors = require "includes.cursors"
-local utilities = require "includes.utilities"
+local periodic = {}
 
 -- Objects
 local buttons = {}
@@ -24,8 +19,8 @@ local map = {
     { "[...]", "[...]", "",   "[...]", "",     "",    "",   "",    "",     "[...]" },
 }
 
-function love.load()
-    love.mouse.setCursor(cursors.point)
+function periodic.load()
+    print("scene periodic loaded")
 
     for i = 1, #map do
         for j = 1, #map[i] do
@@ -61,20 +56,20 @@ function love.load()
     end
 end
 
-function love.mousepressed(x, y, button, istouch, presses)
+function periodic.mousepressed(x, y, button, istouch, presses)
     if button == 1 then
         for i = 1, #buttons do
             if mouse_in_area(buttons[i]) and buttons[i].atom then
                 -- Click button
                 active_button = buttons[i]
                 active_button.dragging.active = true
-                break  -- No need to loop anymore
+                break -- No need to loop anymore
             end
         end
     end
 end
 
-function love.mousereleased(x, y, button, istouch, presses)
+function periodic.mousereleased(x, y, button, istouch, presses)
     if button == 1 then
         if active_button then
             active_button.dragging.active = false
@@ -83,12 +78,10 @@ function love.mousereleased(x, y, button, istouch, presses)
     end
 end
 
-function love.update(dt)
+function periodic.update(dt)
 end
 
-function love.draw()
-    love.graphics.setBackgroundColor(colours.bg())
-
+function periodic.draw()
     local x_o = 25
     local y_o = 25
     local rec_w = 90
@@ -108,3 +101,5 @@ function love.draw()
         end
     end
 end
+
+return periodic
