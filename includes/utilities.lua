@@ -2,8 +2,16 @@
 --- Created by stache.
 --- DateTime: 23.03.25 07:40
 ---
+
+-- State machine, kind of
+game_state = "main"
+
 w_w = love.graphics.getWidth()
 w_h = love.graphics.getHeight()
+
+-- GLobal variables (ew)
+current_element = nil
+math.randomseed(os.time())
 
 function draw_label(label)
     love.graphics.setFont(fonts.regular)

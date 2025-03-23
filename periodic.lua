@@ -2,6 +2,8 @@
 --- Created by stache.
 --- DateTime: 23.03.25 07:24
 ---
+local utilities = require "includes.utilities"
+
 local periodic = {}
 
 -- Objects
@@ -63,7 +65,6 @@ function periodic.mousepressed(x, y, button, istouch, presses)
                 -- Click button
                 active_button = buttons[i]
                 active_button.dragging.active = true
-                print(active_button.text)
                 break -- No need to loop anymore
             end
         end
@@ -73,8 +74,11 @@ end
 function periodic.mousereleased(x, y, button, istouch, presses)
     if button == 1 then
         if active_button then
+            current_element = active_button.atom
             active_button.dragging.active = false
             active_button = nil
+            game_state = atomic
+            game_state.load()
         end
     end
 end

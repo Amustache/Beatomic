@@ -9,15 +9,8 @@ local elements = require "includes.elements"
 local fonts = require "includes.fonts"
 local utilities = require "includes.utilities"
 
--- State machine, kind of
-game_state = "main"
-
-local atomic = require "atomic"
-local periodic = require "periodic"
-
--- GLobal variables (ew)
-current_element = elements[math.random(#elements)]  -- nil
-math.randomseed(os.time())
+atomic = require "atomic"
+periodic = require "periodic"
 
 function love.load()
     love.mouse.setCursor(cursors.point)

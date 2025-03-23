@@ -55,6 +55,10 @@ end
 
 function atomic.load()
     print("scene atomic loaded")
+    if not current_element then
+        current_element = elements[math.random(#elements)]
+    end
+
     -- Electrons
     for shell_level, num_electrons in ipairs(current_element.shells) do
         local current_shell = {}
@@ -254,11 +258,12 @@ function draw_infos()
     love.graphics.setColor(colours.black())
 
     local text_width = fonts.atom_info:getWidth(current_element.name)
-    love.graphics.printf(current_element.name, infos_center_x - text_width/2, infos_center_y, text_width, "center")
+    love.graphics.printf(current_element.name, infos_center_x - text_width / 2, infos_center_y, text_width, "center")
 
     local text_width = fonts.atom_info:getWidth(current_element.conf_short)
     local text_height = fonts.atom_info:getHeight()
-    love.graphics.printf(current_element.conf_short, infos_center_x - text_width/2, infos_center_y + text_height, text_width, "center")
+    love.graphics.printf(current_element.conf_short, infos_center_x - text_width / 2, infos_center_y + text_height,
+        text_width, "center")
 end
 
 function atomic.draw()
