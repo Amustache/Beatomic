@@ -3,15 +3,17 @@
 --- DateTime: 22.03.25 18:46
 ---
 -- Imports
+local cron = require "cron"
 local elements = require "elements"
 local colours = require "colours"
 local fonts = require "fonts"
 local cursors = require "cursors"
 
 -- Parameters
+math.randomseed(os.time())
 local w_w = love.graphics.getWidth()
 local w_h = love.graphics.getHeight()
-math.randomseed(os.time())
+local bpm = 120
 
 -- Atom
 local radius_nucleus = 50
@@ -31,18 +33,22 @@ local menu_origin_y = 0
 -- Objets
 local shells = {}
 local samples = {}
-local active_sample = nil
 local buttons = {}
-local active_button = nil
 local labels = {}
+
+-- Variables
+local time_elapsed = 0
+local active_sample = nil
+local active_button = nil
+local current_beat = 0
 
 function calculate_electron_x_y(shell_level, num_electrons, cur_electron)
     local r = radius_shell + shell_level * radius_shell_extra
     local sep = 360 / num_electrons
-    local ang = math.rad(((cur_electron - 1) * sep) % 360)
+    local ang = -math.rad(((cur_electron - 1) * sep) % 360)
     local x = r * math.sin(ang)
     local y = r * math.cos(ang)
-    return nucleus_center_x + x, math.random() + nucleus_center_y + y
+    return nucleus_center_x + x, nucleus_center_y + y
 end
 
 function love.load()
@@ -81,6 +87,7 @@ function love.load()
         end
         samples[category_name] = current_category
     end
+    tone = love.audio.newSource("sfx/tone 6.wav", "static")
 
     -- Labels & Buttons
     -- For each sample, a button
@@ -148,7 +155,21 @@ function love.mousereleased(x, y, button, istouch, presses)
     end
 end
 
+-- Update beat
+function update_beat_sound()
+     tone:play()
+end
+function update_beat_visual()
+     current_beat = current_beat + 1
+end
+
+local timer_sound = cron.every(1 / (bpm / 60), update_beat_sound)
+local timer_visual = cron.every(1 / (bpm / 60) / 360, update_beat_visual)
+
 function love.update(dt)
+    timer_sound:update(dt)
+    timer_visual:update(dt)
+
     if active_button and active_button.dragging.active then
         love.mouse.setCursor(cursors.closed)
         active_button.x = love.mouse.getX() - active_button.dragging.diff_x
@@ -162,6 +183,15 @@ function love.update(dt)
             end
         end
     end
+end
+
+function draw_beat()
+    love.graphics.setColor(colours.beat_marker())
+    local x, y = calculate_electron_x_y(#ELEMENT.shells, 360, current_beat)
+    love.graphics.setLineWidth(10)
+    love.graphics.line(nucleus_center_x, nucleus_center_y, x, y)
+    love.graphics.setLineWidth(1)
+    --love.graphics.rectangle("fill", nucleus_center_x, nucleus_center_y, x - nucleus_center_x, y - nucleus_center_y)
 end
 
 function draw_atom()
@@ -234,6 +264,8 @@ function love.draw()
         love.graphics.line(w_w / 2, 0, w_w / 2, w_h)
         love.graphics.line(0, 2 * w_h / 3, w_w / 2, 2 * w_h / 3)
     end
+
+    draw_beat()
 
     draw_atom()
 

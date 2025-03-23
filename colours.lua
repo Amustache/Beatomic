@@ -10,7 +10,8 @@ colours = { -- From https://lospec.com/palette-list/fairydust-8
         function() return love.math.colorFromBytes(147, 212, 181) end,
         function() return love.math.colorFromBytes(43, 169, 180) end,
         function() return love.math.colorFromBytes(100, 97, 194) end,
-    }
+    },
+    beat_marker = function() return love.math.colorFromBytes(227, 154, 172) end,
 }
 
 return colours

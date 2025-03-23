@@ -6,3 +6,4 @@
 - Icons are from [Game-icons.net](https://game-icons.net/).
 - Font is [Moche](https://fontesk.com/moche-typeface/) by [Pépite Collectif](https://fontesk.com/designer/pepite-collectif/).
 - Cursors are from [Cursor Pack](https://kenney.nl/assets/cursor-pack) by [Kenney](https://kenney.nl/).
+- [cron.lua](https://github.com/kikito/cron.lua) by [kikito](https://github.com/kikito).
