@@ -116,7 +116,7 @@ function atomic.load()
         for i, current_sample in ipairs(current_category) do
             local button = {
                 category = category_name,
-                text = current_sample.name,
+                text = "",
                 sample = current_sample,
                 x_og = menu_origin_x + 150 + ((i - 1) % 5) * 75,
                 y_og = menu_origin_y + 25 + (2 * cat_i * 75) + (math.floor((i - 1) / 5) * 75),

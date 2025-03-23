@@ -18,7 +18,7 @@ function draw_label(label)
     local text_width = fonts.regular:getWidth(label.text)
     local text_height = fonts.regular:getHeight()
 
-    love.graphics.setColor(colours.nucleus())
+    love.graphics.setColor(colours.bg())
     love.graphics.rectangle("fill", label.x, label.y, label.w, label.h, 10, 10)
     love.graphics.setColor(colours.black())
     love.graphics.rectangle("line", label.x, label.y, label.w, label.h, 10, 10)
@@ -38,7 +38,7 @@ function draw_button(button)
     love.graphics.rectangle("fill", button.x, button.y, button.w, button.h, 10, 10)
 
     -- Actual button
-    love.graphics.setColor(colours.nucleus())
+    love.graphics.setColor(colours.bg())
     local x = button.x
     local y = button.y
     if not button.dragging.active then

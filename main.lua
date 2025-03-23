@@ -15,40 +15,69 @@ periodic = require "periodic"
 function love.load()
     love.mouse.setCursor(cursors.point)
 
-    game_state = periodic
-    game_state.load()
+    if game_state == "main" then
+        game_state = periodic
+        game_state.load()
+    else
+        game_state = periodic
+        game_state.load()
+    end
 end
 
 function love.update(dt)
-    game_state.update(dt)
+    if game_state == "main" then
+        --
+    else
+        game_state.update(dt)
+    end
 end
 
 function love.draw()
     love.graphics.setBackgroundColor(colours.bg())
 
-    game_state.draw()
+    if game_state == "main" then
+        --
+    else
+        game_state.draw()
+    end
 end
 
 function love.keypressed(key)
-    if game_state.keypressed then
-        game_state.keypressed(key)
+    if game_state == "main" then
+        --
+    else
+        if game_state.keypressed then
+            game_state.keypressed(key)
+        end
     end
 end
 
 function love.keyreleased(key)
-    if game_state.keyreleased then
-        game_state.keyreleased(key)
+    if game_state == "main" then
+        --
+    else
+        if game_state.keyreleased then
+            game_state.keyreleased(key)
+        end
     end
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
-    if game_state.mousepressed then
-        game_state.mousepressed(x, y, button, istouch, presses)
+    if game_state == "main" then
+        --
+    else
+        if game_state.mousepressed then
+            game_state.mousepressed(x, y, button, istouch, presses)
+        end
     end
 end
 
 function love.mousereleased(x, y, button, istouch, presses)
-    if game_state.mousereleased then
-        game_state.mousereleased(x, y, button, istouch, presses)
+    if game_state == "main" then
+        --
+    else
+        if game_state.mousereleased then
+            game_state.mousereleased(x, y, button, istouch, presses)
+        end
     end
 end
