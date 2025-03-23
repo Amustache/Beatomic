@@ -14,7 +14,7 @@ atomic = require "atomic"
 periodic = require "periodic"
 
 function love.load()
-    love.mouse.setCursor(cursors.point)
+    --love.mouse.setCursor(cursors.point)
 
     -- Shaders
     effect = moonshine(moonshine.effects.chromasep)

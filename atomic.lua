@@ -227,14 +227,14 @@ function atomic.update(dt)
     timer_visual:update(dt)
 
     if active_button and active_button.dragging.active and active_button ~= menu_back then
-        love.mouse.setCursor(cursors.closed)
+        --love.mouse.setCursor(cursors.closed)
         active_button.x = love.mouse.getX() - active_button.dragging.diff_x
         active_button.y = love.mouse.getY() - active_button.dragging.diff_y
     else
-        love.mouse.setCursor(cursors.point)
+        --love.mouse.setCursor(cursors.point)
         for i = 1, #buttons do
             if mouse_in_area(buttons[i]) then
-                love.mouse.setCursor(cursors.open)
+                --love.mouse.setCursor(cursors.open)
                 break -- No need to check everything
             end
         end

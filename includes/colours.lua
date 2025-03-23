@@ -10,10 +10,10 @@ function colorFromBytes(r, g, b, a)
 	if type(r) == "table" then
 		r, g, b, a = r[1], r[2], r[3], r[4]
 	end
-	r = clamp01(floor(r + 0.5) / 255)
-	g = clamp01(floor(g + 0.5) / 255)
-	b = clamp01(floor(b + 0.5) / 255)
-	a = a ~= nil and clamp01(floor(a + 0.5) / 255) or nil
+	r = clamp01(math.floor(r + 0.5) / 255)
+	g = clamp01(math.floor(g + 0.5) / 255)
+	b = clamp01(math.floor(b + 0.5) / 255)
+	a = a ~= nil and clamp01(math.floor(a + 0.5) / 255) or nil
 	return r, g, b, a
 end
 
