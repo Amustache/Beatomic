@@ -9,9 +9,9 @@ local fonts = require "fonts"
 local cursors = require "cursors"
 
 -- Parameters
-local ELEMENT = elements[11] -- debug
 local w_w = love.graphics.getWidth()
 local w_h = love.graphics.getHeight()
+math.randomseed(os.time())
 
 -- Atom
 local radius_nucleus = 50
@@ -46,6 +46,8 @@ function calculate_electron_x_y(shell_level, num_electrons, cur_electron)
 end
 
 function love.load()
+    ELEMENT = elements[math.random(#elements)]
+
     love.mouse.setCursor(cursors.point)
 
     -- Electrons
@@ -156,7 +158,7 @@ function love.update(dt)
         for i = 1, #buttons do
             if mouse_in_area(buttons[i]) then
                 love.mouse.setCursor(cursors.open)
-                break  -- No need to check everything
+                break -- No need to check everything
             end
         end
     end
@@ -181,7 +183,6 @@ function draw_atom()
     local text_height = fonts.atom_symbol:getHeight()
     love.graphics.print(ELEMENT.symbol, nucleus_center_x - text_width / 2, nucleus_center_y - text_height / 2)
 end
-
 
 function draw_label(label)
     love.graphics.setFont(fonts.regular)
