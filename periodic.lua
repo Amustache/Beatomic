@@ -30,7 +30,7 @@ function periodic.load()
             local y_o = 25
             local rec_w = 90
             local rec_h = 110
-            local x = x_o + (j - 1) * rec_w
+            local x = 2*x_o + (j - 1) * rec_w
             local y = y_o + (i - 1) * rec_h
             local number = tonumber(map[i][j])
             if number then
@@ -87,11 +87,6 @@ function periodic.update(dt)
 end
 
 function periodic.draw()
-    local x_o = 25
-    local y_o = 25
-    local rec_w = 90
-    local rec_h = 110
-
     love.graphics.setFont(fonts.regular)
     love.graphics.setColor(colours.black())
     for i = 1, #buttons do
