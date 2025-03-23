@@ -47,3 +47,4 @@ I don't think I will try to make the chemical formula bit because I'm not sure h
 - [cron.lua](https://github.com/kikito/cron.lua) by [kikito](https://github.com/kikito).
 - Intro music is [Hip Hop 808 Bass Sample 90 BPM](https://youtu.be/R6z1aqVawoA) by [Hip Hop Samples](https://www.youtube.com/@hhspack).
 - [moonshine](https://github.com/vrld/moonshine) by [vrld](https://github.com/vrld).
+- Web version made thanks to the [LÖVE Web Builder](https://schellingb.github.io/LoveWebBuilder/) by [schellingb](https://github.com/schellingb).
