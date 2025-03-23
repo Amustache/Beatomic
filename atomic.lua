@@ -99,7 +99,7 @@ function atomic.load()
         end
         samples[category_name] = current_category
     end
-    tone = love.audio.newSource("sfx/tone 6.wav", "static")
+    tone = love.audio.newSource("sfx/tone.wav", "static")
 
     -- Labels & Buttons
     -- For each sample, a button

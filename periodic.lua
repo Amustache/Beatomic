@@ -24,14 +24,18 @@ local map = {
 function periodic.load()
     print("scene periodic loaded")
 
+    loop_music = love.audio.newSource("sfx/loop.mp3", "static")
+    loop_music:setLooping(true)
+    loop_music:play()
+
     for i = 1, #map do
         for j = 1, #map[i] do
             local x_o = 25
             local y_o = 25
             local rec_w = 90
             local rec_h = 110
-            local x = 2*x_o + (j - 1) * rec_w
-            local y = y_o + (i - 1) * rec_h
+            local x = x_o + (j - 1) * (rec_w + 5)
+            local y = y_o + (i - 1) * (rec_h + 5)
             local number = tonumber(map[i][j])
             if number then
                 atom = elements[number]
@@ -77,6 +81,7 @@ function periodic.mousereleased(x, y, button, istouch, presses)
             current_element = active_button.atom
             active_button.dragging.active = false
             active_button = nil
+            loop_music:stop()
             game_state = atomic
             game_state.load()
         end
