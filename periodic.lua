@@ -24,10 +24,6 @@ local map = {
 function periodic.load()
     print("scene periodic loaded")
 
-    loop_music = love.audio.newSource("sfx/loop.mp3", "static")
-    loop_music:setLooping(true)
-    loop_music:play()
-
     for i = 1, #map do
         for j = 1, #map[i] do
             local x_o = 25
