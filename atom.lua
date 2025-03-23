@@ -1,4 +1,0 @@
----
---- Created by stache.
---- DateTime: 22.03.25 18:46
----
